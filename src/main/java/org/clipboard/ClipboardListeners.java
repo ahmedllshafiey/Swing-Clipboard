@@ -8,12 +8,11 @@ import java.awt.datatransfer.Transferable;
 
 public class ClipboardListeners extends Thread implements ClipboardOwner {
 
-    // Entry Listener
-    interface EntryListener {
+    public interface EntryListener {
         void onCopy(String data);
     }
 
-    private Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+    private final Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
     private EntryListener entryListener;
 
     public void setEntryListener(EntryListener entryListener) {
@@ -21,6 +20,7 @@ public class ClipboardListeners extends Thread implements ClipboardOwner {
     }
 
     @Override
+    @SuppressWarnings("UseSpecificCatch")
     public void lostOwnership(Clipboard c, Transferable t) {
         try {
             sleep(200);
@@ -32,6 +32,7 @@ public class ClipboardListeners extends Thread implements ClipboardOwner {
         regainOwnership(contents);
     }
 
+    @SuppressWarnings("UseSpecificCatch")
     public void processContents(Transferable t){
         try {
             Transferable clipdata = clipboard.getContents(this);
@@ -48,6 +49,7 @@ public class ClipboardListeners extends Thread implements ClipboardOwner {
         clipboard.setContents(t, this);
     }
 
+    @SuppressWarnings({"override", "empty-statement"})
     public void run() {
         Transferable transferable = clipboard.getContents(this);
         regainOwnership(transferable);

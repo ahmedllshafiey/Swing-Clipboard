@@ -2,13 +2,11 @@ package org.clipboard;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -25,12 +23,13 @@ public class ClipboardHistory extends JPanel implements ClipboardListeners.Entry
     
     private JList<String> list;
     private DefaultListModel<String> listModel;
-    private ListSelectionModel listSelectionModel;
+    private final ListSelectionModel listSelectionModel;
 
+    @SuppressWarnings("static-access")
     public ClipboardHistory() {
         super(new BorderLayout());
-        listModel = new DefaultListModel<String>();
-        list = new JList<String>(listModel);
+        listModel = new DefaultListModel<>();
+        list = new JList<>(listModel);
         listSelectionModel = list.getSelectionModel();
         listSelectionModel.setSelectionMode(listSelectionModel.SINGLE_SELECTION);
 
@@ -38,15 +37,11 @@ public class ClipboardHistory extends JPanel implements ClipboardListeners.Entry
         JPanel controlPane = new JPanel();
 
         final JButton button = new JButton("Copy");
-        button.addActionListener(new ActionListener() {
-            
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String value = (String) list.getSelectedValue();
-                int index = list.getSelectedIndex();
-                listModel.remove(index);
-                copyToClipboard(value);
-            }
+        button.addActionListener((ActionEvent e) -> {
+            String value = (String) list.getSelectedValue();
+            int index = list.getSelectedIndex();
+            listModel.remove(index);
+            copyToClipboard(value);
         });
         controlPane.add(button);
 
@@ -98,11 +93,9 @@ public class ClipboardHistory extends JPanel implements ClipboardListeners.Entry
     }
 
     public static void main(String[] args) {
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                ClipboardHistory clipboardHistory = new ClipboardHistory();
-                clipboardHistory.createAndShowGUI();
-            }
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            ClipboardHistory clipboardHistory = new ClipboardHistory();
+            clipboardHistory.createAndShowGUI();
         });
     }
 }
